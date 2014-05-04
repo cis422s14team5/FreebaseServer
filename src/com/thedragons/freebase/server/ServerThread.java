@@ -32,7 +32,6 @@ public class ServerThread extends Thread {
                 output = serverProcessor.processInput(input);
                 out.println(output);
                 if (output.equals("Bye")) {
-                    System.out.printf(">>> %s disconnected%n", socket.getInetAddress());
                     break;
                 }
             }

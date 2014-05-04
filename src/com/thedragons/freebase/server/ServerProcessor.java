@@ -21,15 +21,15 @@ public class ServerProcessor {
         switch (state) {
             case WAITING:
                 state = CONNECTED;
-                output = ("Connected to the Freebase Movie and TV Server. Enter \"tv\" to search for TV shows or " +
+                output = ("Welcome to the Freebase Movie and TV Server. Enter \"tv\" to search for TV shows or " +
                         "\"film\" to search for films.");
                 break;
 
             case CONNECTED:
-                if (input.contains("film")) {
+                if (input.equals("film")) {
                     state = FILM;
                     output = ("Enter a <film title> to search.");
-                } else if (input.contains("tv")) {
+                } else if (input.equals("tv")) {
                     state = TV;
                     output = ("Enter a <tv show title> to search.");
                 } else {

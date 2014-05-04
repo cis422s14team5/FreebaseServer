@@ -11,8 +11,9 @@ public class ServerThread extends Thread {
     private Socket socket = null;
 
     public ServerThread(Socket socket) {
-        super("ServerThread");
+        super("FreebaseServerThread");
         this.socket = socket;
+        System.out.printf(">>> %s connected%n", socket.getInetAddress());
     }
 
     @Override
@@ -27,9 +28,11 @@ public class ServerThread extends Thread {
 
             String input;
             while ((input = in.readLine()) != null) {
+                System.out.printf(">>> %s input %s%n", socket.getInetAddress(), input);
                 output = serverProcessor.processInput(input);
                 out.println(output);
                 if (output.equals("Bye")) {
+                    System.out.printf(">>> %s disconnected%n", socket.getInetAddress());
                     break;
                 }
             }

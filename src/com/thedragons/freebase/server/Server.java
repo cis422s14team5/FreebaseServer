@@ -41,12 +41,7 @@ import java.util.ArrayList;
 public class Server {
 
     public static void main(String[] args) throws IOException {
-//        if (args.length != 1) {
-//            System.err.println("Usage: java -jar FreebaseTestServer.jar <port number>");
-//            System.exit(1);
-//        }
-
-        int portNumber = 1981; // Integer.parseInt(args[0]);
+        int portNumber = 1981;
         boolean listening = true;
 
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
@@ -57,21 +52,5 @@ public class Server {
             System.err.println("Could not listen on port " + portNumber);
             System.exit(-1);
         }
-    }
-
-    private File write(ArrayList<String> outputArray) {
-        FileWriter writer;
-        File output = new File("output.txt");
-        try {
-            writer = new FileWriter(output);
-            for (String string: outputArray) {
-                writer.write(string);
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return output;
     }
 }

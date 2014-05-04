@@ -17,7 +17,6 @@ import org.json.simple.parser.JSONParser;
 
 public class Freebase {
 
-    // private static Properties properties = new Properties();
     private static String API_KEY = "AIzaSyAn395NcvsIoCIkiIH_vMwEn0dXsXKIVsw";
 
     private JSONObject topic;
@@ -35,16 +34,18 @@ public class Freebase {
         }
 
         try {
-            // properties.load(new FileInputStream("freebase.properties"));
             HttpTransport httpTransport = new NetHttpTransport();
             HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
             JSONParser parser = new JSONParser();
+
             GenericUrl url = new GenericUrl("https://www.googleapis.com/freebase/v1/search");
             url.put("query", title);
             url.put("filter", filter);
             url.put("key", API_KEY);
+
             HttpRequest request = requestFactory.buildGetRequest(url);
             HttpResponse httpResponse = request.execute();
+
             JSONObject response = (JSONObject) parser.parse(httpResponse.parseAsString());
             JSONArray results = (JSONArray) response.get("result");
             JSONObject resultMap = (JSONObject) results.get(0);
@@ -57,12 +58,13 @@ public class Freebase {
 
     public void setTopic(String topicId) {
         try {
-            // properties.load(new FileInputStream("freebase.properties"));
             HttpTransport httpTransport = new NetHttpTransport();
             HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
             JSONParser parser = new JSONParser();
+
             GenericUrl url = new GenericUrl("https://www.googleapis.com/freebase/v1/topic" + topicId);
             url.put("key", API_KEY);
+
             HttpRequest request = requestFactory.buildGetRequest(url);
             HttpResponse httpResponse = request.execute();
 

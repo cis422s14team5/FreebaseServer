@@ -6,12 +6,15 @@ public class ServerProcessor {
     private static final int CONNECTED = 1;
     private static final int FILM = 2;
     private static final int TV = 3;
+    private static final int SAVING = 4;
 
     private int state;
     private Freebase freebase;
+    private FileIO io;
 
     public ServerProcessor() {
         freebase = new Freebase();
+        io = new FileIO();
         state = WAITING;
     }
 
@@ -26,14 +29,25 @@ public class ServerProcessor {
                 break;
 
             case CONNECTED:
-                if (input.equals("film")) {
-                    state = FILM;
-                    output = ("Enter a <film title> to search.");
-                } else if (input.equals("tv")) {
-                    state = TV;
-                    output = ("Enter a <tv show title> to search.");
-                } else {
-                    output = ("Enter \"tv\" to search for TV shows or \"film\" to search for films.");
+                switch (input) {
+                    case "film":
+                        state = FILM;
+                        output = ("Enter a <film title> to search.");
+                        break;
+                    case "tv":
+                        state = TV;
+                        output = ("Enter a <tv show title> to search.");
+                        break;
+                    case "save":
+                        state = SAVING;
+                        output = ("Saving...");
+                        break;
+                    case "load":
+                        output = io.read();
+                        break;
+                    default:
+                        output = ("Enter \"tv\" to search for TV shows or \"film\" to search for films.");
+                        break;
                 }
                 break;
 
@@ -59,6 +73,10 @@ public class ServerProcessor {
                 } else {
                     output = ("Enter a <tv show title> to search or \"film\" to search for films.");
                 }
+                break;
+
+            case SAVING:
+                io.write(input);
                 break;
 
             default:

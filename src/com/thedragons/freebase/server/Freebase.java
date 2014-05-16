@@ -46,9 +46,13 @@ public class Freebase {
 
             JSONObject response = (JSONObject) parser.parse(httpResponse.parseAsString());
             JSONArray results = (JSONArray) response.get("result");
-            JSONObject resultMap = (JSONObject) results.get(0);
-
-            setTopic(resultMap.get("id").toString());
+            JSONObject resultMap;
+            try {
+                resultMap = (JSONObject) results.get(0);
+                setTopic(resultMap.get("id").toString());
+            } catch (Exception e) {
+                topic = new JSONObject();
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

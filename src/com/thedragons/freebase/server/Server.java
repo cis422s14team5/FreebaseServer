@@ -32,11 +32,9 @@ package com.thedragons.freebase.server;
  */
 
 import java.io.*;
-import java.lang.Integer;
 import java.lang.String;
 import java.lang.System;
 import java.net.ServerSocket;
-import java.util.ArrayList;
 
 public class Server {
 

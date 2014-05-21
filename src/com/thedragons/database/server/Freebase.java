@@ -1,4 +1,4 @@
-package com.thedragons.freebase.server;
+package com.thedragons.database.server;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;

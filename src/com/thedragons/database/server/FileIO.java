@@ -1,7 +1,6 @@
-package com.thedragons.freebase.server;
+package com.thedragons.database.server;
 
 import java.io.*;
-import java.util.ArrayList;
 
 /**
  * Reads and writes to the file system. Used to read and write to the store.txt file.

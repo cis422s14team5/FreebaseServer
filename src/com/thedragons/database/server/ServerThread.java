@@ -1,4 +1,4 @@
-package com.thedragons.freebase.server;
+package com.thedragons.database.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;

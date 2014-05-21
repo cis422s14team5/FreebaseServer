@@ -1,4 +1,4 @@
-package com.thedragons.freebase.server;
+package com.thedragons.database.server;
 
 public class ServerProcessor {
 

@@ -2,10 +2,7 @@ package com.thedragons.database.server;
 
 import info.movito.themoviedbapi.*;
 import info.movito.themoviedbapi.model.*;
-import info.movito.themoviedbapi.model.core.MovieResults;
 import info.movito.themoviedbapi.model.people.Person;
-import info.movito.themoviedbapi.model.people.PersonCredits;
-import info.movito.themoviedbapi.model.people.PersonCrew;
 import info.movito.themoviedbapi.model.tv.Network;
 import info.movito.themoviedbapi.model.tv.TvEpisode;
 import info.movito.themoviedbapi.model.tv.TvSeason;
@@ -200,9 +197,9 @@ public class TMDb {
 //        return output;
 //    }
 
-    public static void main(String[] args) {
-        TMDb tmDb = new TMDb();
-        tmDb.searchTV("korra");
-        //tmDb.searchFilm("avatar");
-    }
+//    public static void main(String[] args) {
+//        TMDb tmDb = new TMDb();
+//        tmDb.searchTV("korra");
+//        //tmDb.searchFilm("avatar");
+//    }
 }

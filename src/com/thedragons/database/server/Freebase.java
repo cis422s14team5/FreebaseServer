@@ -20,6 +20,7 @@ public class Freebase {
 
     public void search(String title, String type) {
         String filter = "";
+        int limit = 10000;
         if (type.equals("film")) {
             filter = "(all type:/film/film)";
         } else if (type.equals("tv")) {
@@ -33,6 +34,7 @@ public class Freebase {
 
             GenericUrl url = new GenericUrl("https://www.googleapis.com/freebase/v1/search");
             url.put("query", title);
+            url.put("limit", limit);
             url.put("filter", filter);
             url.put("key", API_KEY);
 

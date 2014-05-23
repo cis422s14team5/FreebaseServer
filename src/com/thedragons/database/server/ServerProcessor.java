@@ -10,12 +10,12 @@ public class ServerProcessor {
 
     private int state;
     private Freebase freebase;
-    private TMDb tmDb;
+    // private TMDb tmDb;
     private FileIO io;
 
     public ServerProcessor() {
         freebase = new Freebase();
-        tmDb = new TMDb();
+        // tmDb = new TMDb();
         io = new FileIO();
         state = WAITING;
     }
@@ -70,9 +70,9 @@ public class ServerProcessor {
                     state = FILM;
                     output = ("Enter a <film title> to search or \"tv\" to search for TV shows.");
                 } else if (!(input.equals("quit") && !input.equals("film") && !input.equals(""))) {
-                    //freebase.search(input, "tv");
-                    //output = freebase.getTopic().toJSONString();
-                    output = tmDb.searchTV(input).toJSONString();
+                    freebase.search(input, "tv");
+                    output = freebase.getTopic().toJSONString();
+                    //output = tmDb.searchTV(input).toJSONString();
                 } else {
                     output = ("Enter a <tv show title> to search or \"film\" to search for films.");
                 }

@@ -1,7 +1,10 @@
 package com.thedragons.database.server;
 
-import info.movito.themoviedbapi.*;
-import info.movito.themoviedbapi.model.*;
+import info.movito.themoviedbapi.TmdbApi;
+import info.movito.themoviedbapi.TmdbSearch;
+import info.movito.themoviedbapi.TmdbTV;
+import info.movito.themoviedbapi.TmdbTvSeasons;
+import info.movito.themoviedbapi.model.Genre;
 import info.movito.themoviedbapi.model.people.Person;
 import info.movito.themoviedbapi.model.tv.Network;
 import info.movito.themoviedbapi.model.tv.TvEpisode;
@@ -10,7 +13,8 @@ import info.movito.themoviedbapi.model.tv.TvSeries;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TMDb {
 

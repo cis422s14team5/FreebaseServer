@@ -31,9 +31,7 @@ package com.thedragons.database.server;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.*;
-import java.lang.String;
-import java.lang.System;
+import java.io.IOException;
 import java.net.ServerSocket;
 
 public class Server {

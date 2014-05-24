@@ -6,21 +6,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-// TODO not getting the compete episode list
-
 public class Freebase {
 
     private static String API_KEY = "AIzaSyAn395NcvsIoCIkiIH_vMwEn0dXsXKIVsw";
 
-    private JSONObject topic;
-
-    public JSONObject getTopic() {
-        return topic;
-    }
-
-    public void search(String title, String type) {
+    public JSONObject search(String title, String type) {
+        JSONObject topic = new JSONObject();
         String filter = "";
-        int limit = 10000;
+        int limit = 100;
         if (type.equals("film")) {
             filter = "(all type:/film/film)";
         } else if (type.equals("tv")) {
@@ -44,25 +37,34 @@ public class Freebase {
             JSONObject response = (JSONObject) parser.parse(httpResponse.parseAsString());
             JSONArray results = (JSONArray) response.get("result");
             JSONObject resultMap;
+
             try {
                 resultMap = (JSONObject) results.get(0);
-                setTopic(resultMap.get("id").toString());
+                topic = getTopic(resultMap.get("id").toString());
+
             } catch (Exception e) {
-                topic = new JSONObject();
+                System.out.println(">>> " + e);
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        return topic;
     }
 
-    public void setTopic(String topicId) {
+    public JSONObject getTopic(String topicId) {
+        JSONObject topic = new JSONObject();
         try {
             HttpTransport httpTransport = new NetHttpTransport();
             HttpRequestFactory requestFactory = httpTransport.createRequestFactory();
             JSONParser parser = new JSONParser();
 
             GenericUrl url = new GenericUrl("https://www.googleapis.com/freebase/v1/topic" + topicId);
+            url.put("limit", 100);
             url.put("key", API_KEY);
+
+            System.out.println(">>> Getting topic: " + topicId);
 
             HttpRequest request = requestFactory.buildGetRequest(url);
             HttpResponse httpResponse = request.execute();
@@ -71,5 +73,7 @@ public class Freebase {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        return topic;
     }
 }

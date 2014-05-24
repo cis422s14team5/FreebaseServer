@@ -40,6 +40,8 @@ public class Server {
         int portNumber = 1981;
         boolean listening = true;
 
+        System.out.println("Welcome to the WatchlistPro Server.");
+
         try (ServerSocket serverSocket = new ServerSocket(portNumber)) {
             while (listening) {
                 new ServerThread(serverSocket.accept()).start();

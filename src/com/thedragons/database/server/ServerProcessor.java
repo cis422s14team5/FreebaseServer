@@ -1,5 +1,8 @@
 package com.thedragons.database.server;
 
+import java.io.IOException;
+import java.util.StringTokenizer;
+
 public class ServerProcessor {
 
     private static final int WAITING = 0;
@@ -7,21 +10,27 @@ public class ServerProcessor {
     private static final int FILM = 2;
     private static final int TV = 3;
     private static final int SAVING = 4;
+    private static final int GETTOPIC = 5;
 
     private int state;
     private Freebase freebase;
     // private TMDb tmDb;
     private FileIO io;
+    private AuthStorage authStorage;
 
     public ServerProcessor() {
         freebase = new Freebase();
         // tmDb = new TMDb();
         io = new FileIO();
         state = WAITING;
+        authStorage = new AuthStorage();
     }
 
-    public String processInput(String input) {
+    public String processInput(String input) throws IOException {
+        StringTokenizer tokens = new StringTokenizer(input);
         String output = "";
+        String acctName;
+        String password;
 
         switch (state) {
             case WAITING:
@@ -31,7 +40,8 @@ public class ServerProcessor {
                 break;
 
             case CONNECTED:
-                switch (input) {
+                String method = tokens.nextToken();
+                switch (method) {
                     case "film":
                         state = FILM;
                         output = ("Enter a <film title> to search.");
@@ -40,15 +50,51 @@ public class ServerProcessor {
                         state = TV;
                         output = ("Enter a <tv show title> to search.");
                         break;
-                    case "save":
-                        state = SAVING;
-                        output = ("Saving...");
+                    case "getTopic":
+                        state = GETTOPIC;
+                        output = ("Retrieving topic...");
                         break;
-                    case "load":
-                        output = io.read();
+                    case("add"):
+                        acctName = tokens.nextToken();
+                        password = tokens.nextToken();
+                        if(authStorage.addAcct(acctName, password)) {
+                            output = "true";
+                        } else {
+                            output = "false";
+                        }
+                        break;
+                    case("login"):
+                        acctName = tokens.nextToken();
+                        password = tokens.nextToken();
+                        if(authStorage.logIn(acctName, password)) {
+                            output = "true";
+                        } else {
+                            output = "false";
+                        }
+                        break;
+                    case("getsaves"):
+                        acctName = tokens.nextToken();
+                        output = authStorage.getSaves(acctName);
+                        break;
+                    case("save"):
+                        acctName = tokens.nextToken();
+                        String saveName = tokens.nextToken();
+                        String data = "";
+                        String s;
+                        while ((s = tokens.nextToken()) != null) {
+                            data += s + " ";
+                        }
+
+                        authStorage.saveData(acctName, saveName, data);
+                        output =  "true";
+                        break;
+                    case("load"):
+                        acctName = tokens.nextToken();
+                        saveName = tokens.nextToken();
+                        output =  authStorage.loadData(acctName, saveName);
                         break;
                     default:
-                        output = ("Enter \"tv\" to search for TV shows or \"film\" to search for films.");
+                        output =  "unexpected input";
                         break;
                 }
                 break;
@@ -57,9 +103,9 @@ public class ServerProcessor {
                 if (input.equals("tv")) {
                     state = TV;
                     output = ("Enter a <tv show title> to search or \"film\" to search for films.");
-                } else if (!(input.equals("quit") && !input.equals("tv") &&  !input.equals(""))) {
-                    freebase.search(input, "film");
-                    output = freebase.getTopic().toJSONString();
+                } else if (!(input.equals("quit") && !input.equals("tv") && !input.equals(""))) {
+                    output = freebase.search(input, "film").toJSONString();
+                    // output = freebase.getTopic().toJSONString();
                 } else {
                     output = ("Enter a <film title> to search or \"tv\" to search for TV shows.");
                 }
@@ -70,17 +116,22 @@ public class ServerProcessor {
                     state = FILM;
                     output = ("Enter a <film title> to search or \"tv\" to search for TV shows.");
                 } else if (!(input.equals("quit") && !input.equals("film") && !input.equals(""))) {
-                    freebase.search(input, "tv");
-                    output = freebase.getTopic().toJSONString();
-                    //output = tmDb.searchTV(input).toJSONString();
+                    output = freebase.search(input, "tv").toJSONString();
+                    // output = tmDb.searchTV(input).toJSONString();
                 } else {
                     output = ("Enter a <tv show title> to search or \"film\" to search for films.");
                 }
                 break;
 
-            case SAVING:
-                io.write(input);
+            case GETTOPIC:
+                if (!(input.equals("quit") && !input.equals("film") && !input.equals(""))) {
+                    output = freebase.getTopic(input).toJSONString();
+                }
                 break;
+
+//            case SAVING:
+//                io.write(input);
+//                break;
 
             default:
                 break;

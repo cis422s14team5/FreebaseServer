@@ -122,7 +122,7 @@ public class AuthStorage {
 
 	public void saveData(String acctName, String saveName, String content) throws IOException {
         File t = new File(acctName+"/"+saveName+".bin");
-        if (!t.isFile()) {
+        if (!t.exists()) {
             FileWriter saves;
             try {
                 saves = new FileWriter(acctName + "/saves.txt", true);//1 is for append

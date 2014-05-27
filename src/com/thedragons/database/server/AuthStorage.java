@@ -114,7 +114,7 @@ public class AuthStorage {
         String s = "";
         String outPut = "";
         while ((s = in.readLine()) != null) {
-            outPut += s + " ";
+            outPut += s + "-=-";
         }
         in.close();
         return outPut;

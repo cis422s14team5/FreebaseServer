@@ -96,14 +96,19 @@ public class AuthStorage {
 				System.out.println(e);
                 return false;
 		}
-        String s = "";
+        String s;
+        boolean isAccount = false;
         if ((s = in.readLine()) != null) {
-            if (acctName.regionMatches(0, s, 0, acctName.length())) {
-                return password.regionMatches(acctName.length() + 1, s, 0, password.length());
+            String[] credentials = s.split(" ");
+            if (acctName.equals(credentials[0]) && password.equals(credentials[1])) {
+                isAccount = true;
             }
+//            if (acctName.regionMatches(0, s, 0, acctName.length())) {
+//                return password.regionMatches(acctName.length() + 1, s, 0, password.length());
+//            }
 
         }
-        return false;//invalid account name
+        return isAccount;
 	}
 
     public String getSaves(String acctName) throws IOException {

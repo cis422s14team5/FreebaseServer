@@ -37,61 +37,73 @@ public class ServerProcessor {
         switch (state) {
             case WAITING:
                 state = CONNECTED;
-                output = ("Welcome to the Freebase Movie and TV Server. Enter \"tv\" to search for TV shows or " +
-                        "\"film\" to search for films.");
+                output = ("Welcome to the WatchlistPro Server.");
                 break;
 
             case CONNECTED:
                 // String method = tokens.nextToken();
+                System.out.println(">>> Processing: " + inputArray[0]);
                 switch (inputArray[0]) {
                     case "film":
                         state = FILM;
-                        output = ("Enter a <film title> to search.");
+                        output = ("Processing: " + inputArray[0]);
+                        System.out.println(">>> Ready to search for films.");
                         break;
                     case "tv":
                         state = TV;
-                        output = ("Enter a <tv show title> to search.");
+                        output = ("Processing: " + inputArray[0]);
+                        System.out.println(">>> Ready to search for TV shows.");
                         break;
                     case "getTopic":
                         state = GETTOPIC;
                         output = ("Retrieving topic...");
+                        System.out.println(">>> Retrieving topic.");
                         break;
                     case("add"):
                         acctName = inputArray[1];
                         password = inputArray[2];
+                        System.out.println(">>> Attempting to add account: " + acctName);
                         if (authStorage.addAcct(acctName, password)) {
+                            System.out.println(">>> Added new account: " + acctName);
                             output = "true";
                         } else {
+                            System.out.println(">>> Failed to add new account: " + acctName);
                             output = "false";
                         }
                         break;
                     case("login"):
                         acctName = inputArray[1];
                         password = inputArray[2];
+                        System.out.println(">>> Attempting to login account: " + acctName);
                         if (authStorage.logIn(acctName, password)) {
+                            System.out.println(">>> Logged in account: " + acctName);
                             output = "true";
                         } else {
+                            System.out.println(">>> Failed to login account: " + acctName);
                             output = "false";
                         }
                         break;
                     case("getsaves"):
                         acctName = inputArray[1];
+                        System.out.println(">>> Getting saves for: " + acctName);
                         output = authStorage.getSaves(acctName);
                         break;
                     case("save"):
                         acctName = inputArray[1];
                         saveName = inputArray[2];
                         String data = inputArray[3];
+                        System.out.println(">>> Saving data for: " + acctName);
                         authStorage.saveData(acctName, saveName, data);
                         output =  "true";
                         break;
                     case("load"):
                         acctName = inputArray[1];
                         saveName = inputArray[2];
-                        output =  authStorage.loadData(acctName, saveName);
+                        System.out.println(">>> Loading data for: " + acctName);
+                        output = authStorage.loadData(acctName, saveName);
                         break;
                     default:
-                        output =  "unexpected input";
+                        output = "Server received unexpected input: " + inputArray[0];
                         break;
                 }
                 break;
@@ -99,24 +111,24 @@ public class ServerProcessor {
             case FILM:
                 if (input.equals("tv")) {
                     state = TV;
-                    output = ("Enter a <tv show title> to search or \"film\" to search for films.");
+                    output = ("Server received: " + input);
                 } else if (!(input.equals("quit") && !input.equals("tv") && !input.equals(""))) {
                     output = freebase.search(input, "film").toJSONString();
                     // output = freebase.getTopic().toJSONString();
                 } else {
-                    output = ("Enter a <film title> to search or \"tv\" to search for TV shows.");
+                    output = ("Server received: " + input);
                 }
                 break;
 
             case TV:
                 if (input.equals("film")) {
                     state = FILM;
-                    output = ("Enter a <film title> to search or \"tv\" to search for TV shows.");
+                    output = ("Server received: " + input);
                 } else if (!(input.equals("quit") && !input.equals("film") && !input.equals(""))) {
                     output = freebase.search(input, "tv").toJSONString();
                     // output = tmDb.searchTV(input).toJSONString();
                 } else {
-                    output = ("Enter a <tv show title> to search or \"film\" to search for films.");
+                    output = ("Server received: " + input);
                 }
                 break;
 

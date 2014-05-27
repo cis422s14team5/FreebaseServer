@@ -6,16 +6,25 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-
+/**
+ * A server thread created whenever a client connects to the server.
+ */
 public class ServerThread extends Thread {
     private Socket socket = null;
 
+    /**
+     * Constructor.
+     * @param socket is the client socket.
+     */
     public ServerThread(Socket socket) {
         super("FreebaseServerThread");
         this.socket = socket;
         System.out.printf(">>> %s connected%n", socket.getInetAddress());
     }
 
+    /**
+     * Handles the client connection.
+     */
     @Override
     public void run() {
         try {

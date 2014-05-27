@@ -6,33 +6,17 @@ import java.io.*;
 import java.net.*;
 import java.util.HashMap;
 
-
+/**
+ * Authentication of user accounts and storage and retrieval of save data.
+ */
 public class AuthStorage {
 
-//    public static void main(String [] args) {
-//        AuthStorage as = new AuthStorage();
-//        try {
-//            as.addAcct("ac1", "pw1");
-//            as.addAcct("ac2", "pw2");
-//            as.addAcct("ac1", "pw3");
-//            as.addAcct("ac5", "pw5");
-//
-//            as.logIn("ac1", "pw1");
-//            as.logIn("ac1", "pw2");
-//
-//            as.saveData("ac1", "save data for ac1", "save1");
-//            as.saveData("ac1", "save data for ac1", "save2");
-//            as.saveData("ac1", "save data for ac1", "save3");
-//            as.saveData("ac1", "save data for ac1", "save4");
-//
-//            System.out.println(as.loadData("ac1", "save1"));
-//            System.out.println(as.getSaves("ac1"));
-//        }catch (IOException e) {
-//            System.out.println(e);
-//        }
-//    }
-
-	//only alphanumeric
+    /**
+     * Validates an account name.
+     * @param acctName is the account name to validate.
+     * @return true if valid and false if invalid.
+     * @throws IOException if buffer read failed.
+     */
 	private boolean validAcct(String acctName) throws IOException {
         //alphanumeric only and 2-12 characters
 		if (!acctName.matches("^[a-zA-Z0-9]{2,13}$")) {
@@ -58,7 +42,13 @@ public class AuthStorage {
 		return true;
 	}
 
-
+    /**
+     * Adds a new account.
+     * @param acctName is the account name to add.
+     * @param password is the password associated with the account.
+     * @return true if the account was added and false if it was not added.
+     * @throws IOException if file creation failed.
+     */
 	public boolean addAcct(String acctName, String password) throws IOException {
         //checking for if this is first user
         File u = new File("users.txt");
@@ -91,6 +81,13 @@ public class AuthStorage {
         return false;
 	}
 
+    /**
+     * Logs in an account.
+     * @param acctName is the account name to login.
+     * @param password is the password associated with the account.
+     * @return true if the login succeeded and false if it failed.
+     * @throws IOException if read file failed.
+     */
 	public boolean logIn(String acctName, String password) throws IOException {
         BufferedReader in;
 		try {
@@ -106,14 +103,16 @@ public class AuthStorage {
             if (acctName.equals(credentials[0]) && password.equals(credentials[1])) {
                 isAccount = true;
             }
-//            if (acctName.regionMatches(0, s, 0, acctName.length())) {
-//                return password.regionMatches(acctName.length() + 1, s, 0, password.length());
-//            }
-
         }
         return isAccount;
 	}
 
+    /**
+     * Gets and returns the list of saves for an account.
+     * @param acctName is the account name to retrieve the saves for.
+     * @return true if the save list was retrieved and false if it was not.
+     * @throws IOException if read file failed.
+     */
     public String getSaves(String acctName) throws IOException {
         BufferedReader in;
         try {
@@ -135,6 +134,13 @@ public class AuthStorage {
         return output;
     }
 
+    /**
+     * Saves data for an account.
+     * @param acctName is the account name to saves the data for.
+     * @param saveName is the file name to save the data in.
+     * @param content is the data to save.
+     * @throws IOException if the file creation failed.
+     */
 	public void saveData(String acctName, String saveName, String content) throws IOException {
         File t = new File(acctName+"/"+saveName+".bin");
         if (!t.exists()) {
@@ -160,6 +166,13 @@ public class AuthStorage {
 		out.close();
 	}
 
+    /**
+     * Loads data for an account.
+     * @param acctName is the account name to load the data for.
+     * @param saveName is the file name to load the data from.
+     * @return true if the data was loaded and false if it was not.
+     * @throws IOException if the file was not read.
+     */
 	public String loadData(String acctName, String saveName) throws IOException {
         BufferedReader in;
 		try {

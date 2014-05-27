@@ -6,10 +6,19 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+/**
+ * Searches the Freebase database for topics and returns them.
+ */
 public class Freebase {
 
     private static String API_KEY = "AIzaSyAn395NcvsIoCIkiIH_vMwEn0dXsXKIVsw";
 
+    /**
+     * Search Freebase for a title.
+     * @param title is the title to search for.
+     * @param type is the type to search for.
+     * @return a topic.
+     */
     public JSONObject search(String title, String type) {
         JSONObject topic = new JSONObject();
         String filter = "";
@@ -53,6 +62,11 @@ public class Freebase {
         return topic;
     }
 
+    /**
+     * Gets a topic from Freebase by topic ID.
+     * @param topicId the topic ID to retrieve.
+     * @return the retrieved topic.
+     */
     public JSONObject getTopic(String topicId) {
         JSONObject topic = new JSONObject();
         try {

@@ -3,6 +3,9 @@ package com.thedragons.database.server;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+/**
+ * Process input for the server.
+ */
 public class ServerProcessor {
 
     private static final int WAITING = 0;
@@ -18,6 +21,9 @@ public class ServerProcessor {
     private FileIO io;
     private AuthStorage authStorage;
 
+    /**
+     * Constructor.
+     */
     public ServerProcessor() {
         freebase = new Freebase();
         // tmDb = new TMDb();
@@ -26,6 +32,12 @@ public class ServerProcessor {
         authStorage = new AuthStorage();
     }
 
+    /**
+     * Processes server input and generates output to be sent to a client.
+     * @param input is the input to process.
+     * @return the output.
+     * @throws IOException if authentication, saving, or loading failed.
+     */
     public String processInput(String input) throws IOException {
         //StringTokenizer tokens = new StringTokenizer(input);
         String[] inputArray = input.split("-=-");

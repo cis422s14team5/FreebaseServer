@@ -34,9 +34,16 @@ package com.thedragons.database.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * The main server class.
+ */
 public class Server {
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * Main method.
+     * @param args is the command line argument array.
+     */
+    public static void main(String[] args) {
         int portNumber = 1981;
         boolean listening = true;
 

@@ -1,7 +1,10 @@
 package com.thedragons.database.server;
 
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 
 public class AuthStorage {
@@ -119,13 +122,17 @@ public class AuthStorage {
             System.out.println(e);
             return "";
         }
-        String s = "";
-        String outPut = "";
+        String s;
+        String saves = "";
         while ((s = in.readLine()) != null) {
-            outPut += s + "-=-";
+            saves += s + "-=-";
         }
+        HashMap<String, String> outMap = new HashMap<>();
+        outMap.put("saves", saves);
+        Gson gson = new Gson();
+        String output = gson.toJson(outMap);
         in.close();
-        return outPut;
+        return output;
     }
 
 	public void saveData(String acctName, String saveName, String content) throws IOException {

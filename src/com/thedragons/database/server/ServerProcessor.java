@@ -87,6 +87,7 @@ public class ServerProcessor {
                         acctName = inputArray[1];
                         System.out.println(">>> Getting saves for: " + acctName);
                         output = authStorage.getSaves(acctName);
+                        System.out.println(">>> Sending: " + output);
                         break;
                     case("save"):
                         acctName = inputArray[1];
@@ -101,6 +102,7 @@ public class ServerProcessor {
                         saveName = inputArray[2];
                         System.out.println(">>> Loading data for: " + acctName);
                         output = authStorage.loadData(acctName, saveName);
+                        System.out.println(">>> Sending: " + output);
                         break;
                     default:
                         output = "Server received unexpected input: " + inputArray[0];

@@ -27,10 +27,12 @@ public class ServerProcessor {
     }
 
     public String processInput(String input) throws IOException {
-        StringTokenizer tokens = new StringTokenizer(input);
+        //StringTokenizer tokens = new StringTokenizer(input);
+        String[] inputArray = input.split("-=-");
         String output = "";
         String acctName;
         String password;
+        String saveName;
 
         switch (state) {
             case WAITING:
@@ -40,8 +42,8 @@ public class ServerProcessor {
                 break;
 
             case CONNECTED:
-                String method = tokens.nextToken();
-                switch (method) {
+                // String method = tokens.nextToken();
+                switch (inputArray[0]) {
                     case "film":
                         state = FILM;
                         output = ("Enter a <film title> to search.");
@@ -55,17 +57,17 @@ public class ServerProcessor {
                         output = ("Retrieving topic...");
                         break;
                     case("add"):
-                        acctName = tokens.nextToken();
-                        password = tokens.nextToken();
-                        if(authStorage.addAcct(acctName, password)) {
+                        acctName = inputArray[1];
+                        password = inputArray[2];
+                        if (authStorage.addAcct(acctName, password)) {
                             output = "true";
                         } else {
                             output = "false";
                         }
                         break;
                     case("login"):
-                        acctName = tokens.nextToken();
-                        password = tokens.nextToken();
+                        acctName = inputArray[1];
+                        password = inputArray[2];
                         if(authStorage.logIn(acctName, password)) {
                             output = "true";
                         } else {
@@ -73,24 +75,19 @@ public class ServerProcessor {
                         }
                         break;
                     case("getsaves"):
-                        acctName = tokens.nextToken();
+                        acctName = inputArray[1];
                         output = authStorage.getSaves(acctName);
                         break;
                     case("save"):
-                        acctName = tokens.nextToken();
-                        String saveName = tokens.nextToken();
-                        String data = "";
-                        String s;
-                        while ((s = tokens.nextToken()) != null) {
-                            data += s + " ";
-                        }
-
+                        acctName = inputArray[1];
+                        saveName = inputArray[2];
+                        String data = inputArray[3];
                         authStorage.saveData(acctName, saveName, data);
                         output =  "true";
                         break;
                     case("load"):
-                        acctName = tokens.nextToken();
-                        saveName = tokens.nextToken();
+                        acctName = inputArray[1];
+                        saveName = inputArray[2];
                         output =  authStorage.loadData(acctName, saveName);
                         break;
                     default:

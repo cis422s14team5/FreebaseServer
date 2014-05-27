@@ -68,7 +68,7 @@ public class ServerProcessor {
                     case("login"):
                         acctName = inputArray[1];
                         password = inputArray[2];
-                        if(authStorage.logIn(acctName, password)) {
+                        if (authStorage.logIn(acctName, password)) {
                             output = "true";
                         } else {
                             output = "false";

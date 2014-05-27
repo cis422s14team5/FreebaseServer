@@ -43,9 +43,12 @@ public class AuthStorage {
 				System.out.println(e);
                 return false;
 			}
-			while((s = in.readLine()) != null){
-				if (acctName.regionMatches(0, s, 0, acctName.length()))
-					return false;
+			while((s = in.readLine()) != null) {
+                String[] userArray = s.split(" ");
+				if (!acctName.equals(userArray[0])) {
+                    return false;
+                }
+
 			}
 			in.close();
 		}

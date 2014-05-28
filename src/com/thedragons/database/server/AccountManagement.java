@@ -35,7 +35,7 @@
 //        out.close();
 //    }
 //
-//    public boolean logIn(String acctName, String password) throws FileNotFoundException {
+//    public boolean checkAccount(String acctName, String password) throws FileNotFoundException {
 //        FileInputStream in = new FileInputStream("users.txt");
 //        String s = "";
 //        while(s = in.read() != -1){

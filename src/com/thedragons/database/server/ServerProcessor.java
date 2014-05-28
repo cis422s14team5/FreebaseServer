@@ -1,7 +1,7 @@
 package com.thedragons.database.server;
 
 import java.io.IOException;
-import java.util.StringTokenizer;
+import java.util.ArrayList;
 
 /**
  * Process input for the server.
@@ -21,6 +21,8 @@ public class ServerProcessor {
     private FileIO io;
     private AuthStorage authStorage;
 
+    private ArrayList<String> loggedInList;
+
     /**
      * Constructor.
      */
@@ -30,6 +32,7 @@ public class ServerProcessor {
         io = new FileIO();
         state = WAITING;
         authStorage = new AuthStorage();
+        loggedInList = new ArrayList<>();
     }
 
     /**
@@ -87,27 +90,73 @@ public class ServerProcessor {
                         acctName = inputArray[1];
                         password = inputArray[2];
                         System.out.println(">>> Attempting to login account: " + acctName);
-                        if (authStorage.logIn(acctName, password)) {
+                        if (authStorage.checkAccount(acctName, password)) {
                             System.out.println(">>> Logged in account: " + acctName);
+                            //loggedInList.add(acctName);
                             output = "true";
                         } else {
                             System.out.println(">>> Failed to login account: " + acctName);
                             output = "false";
                         }
                         break;
-                    case("getsaves"):
+                    case("logout"):
                         acctName = inputArray[1];
-                        System.out.println(">>> Getting saves for: " + acctName);
-                        output = authStorage.getSaves(acctName);
-                        System.out.println(">>> Sending: " + output);
+                        password = inputArray[2];
+                        System.out.println(">>> Attempting to logout account: " + acctName);
+                        if (authStorage.checkAccount(acctName, password)) {
+                            System.out.println(">>> Successfully logged out account: " + acctName);
+                            //loggedInList.remove(acctName);
+                            output = "true";
+                        } else {
+                            System.out.println(">>> Failed to logged out account: " + acctName);
+                            output = "false";
+                        }
+                        break;
+                    case("getsaves"):
+                        if (inputArray.length > 1) {
+                            acctName = inputArray[1];
+                            System.out.println(">>> Getting saves for: " + acctName);
+                            output = authStorage.getSaves(acctName);
+                            System.out.println(">>> Sending: " + output);
+//                            if (loggedInList.contains(inputArray[1])) {
+//                                acctName = inputArray[1];
+//                                System.out.println(">>> Getting saves for: " + acctName);
+//                                output = authStorage.getSaves(acctName);
+//                                System.out.println(">>> Sending: " + output);
+//                            } else {
+//                                System.out.println(">>> Failed to get saves because user not logged in.");
+//                                output = "User account is not logged in.";
+//                            }
+                        } else {
+                            System.out.println(">>> Failed to get saves because user not logged in.");
+                            output = "User account is not logged in.";
+
+                        }
                         break;
                     case("save"):
-                        acctName = inputArray[1];
-                        saveName = inputArray[2];
-                        String data = inputArray[3];
-                        System.out.println(">>> Saving data for: " + acctName);
-                        authStorage.saveData(acctName, saveName, data);
-                        output =  "true";
+                        if (inputArray.length > 1) {
+                            acctName = inputArray[1];
+                            saveName = inputArray[2];
+                            String data = inputArray[3];
+                            System.out.println(">>> Saving data for: " + acctName);
+                            authStorage.saveData(acctName, saveName, data);
+                            output = "true";
+//                            if (loggedInList.contains(inputArray[1])) {
+//                                acctName = inputArray[1];
+//                                saveName = inputArray[2];
+//                                String data = inputArray[3];
+//                                System.out.println(">>> Saving data for: " + acctName);
+//                                authStorage.saveData(acctName, saveName, data);
+//                                output = "true";
+//                            } else {
+//                                System.out.println(">>> Failed to save because user not logged in.");
+//                                output = "User account is not logged in.";
+//                            }
+                        } else {
+                            System.out.println(">>> Failed to save because user not logged in.");
+                            output = "User account is not logged in.";
+
+                        }
                         break;
                     case("load"):
                         acctName = inputArray[1];

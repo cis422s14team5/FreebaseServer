@@ -88,7 +88,7 @@ public class AuthStorage {
      * @return true if the login succeeded and false if it failed.
      * @throws IOException if read file failed.
      */
-	public boolean logIn(String acctName, String password) throws IOException {
+	public boolean checkAccount(String acctName, String password) throws IOException {
         BufferedReader in;
 		try {
             in = new BufferedReader(new FileReader("users.txt"));

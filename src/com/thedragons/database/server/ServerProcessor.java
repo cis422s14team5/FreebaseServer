@@ -1,7 +1,15 @@
 package com.thedragons.database.server;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.lang.reflect.Type;
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Process input for the server.
@@ -14,12 +22,14 @@ public class ServerProcessor {
     private static final int TV = 3;
     private static final int SAVING = 4;
     private static final int GETTOPIC = 5;
+    private static final int ADDACCOUNT = 6;
 
     private int state;
     private Freebase freebase;
     // private TMDb tmDb;
     private FileIO io;
     private AuthStorage authStorage;
+    private Gson gson;
 
     private ArrayList<String> loggedInList;
 
@@ -33,6 +43,7 @@ public class ServerProcessor {
         state = WAITING;
         authStorage = new AuthStorage();
         loggedInList = new ArrayList<>();
+        gson = new Gson();
     }
 
     /**
@@ -75,16 +86,23 @@ public class ServerProcessor {
                         System.out.println(">>> Retrieving topic.");
                         break;
                     case("add"):
-                        acctName = inputArray[1];
-                        password = inputArray[2];
-                        System.out.println(">>> Attempting to add account: " + acctName);
-                        if (authStorage.addAcct(acctName, password)) {
-                            System.out.println(">>> Added new account: " + acctName);
-                            output = "true";
-                        } else {
-                            System.out.println(">>> Failed to add new account: " + acctName);
-                            output = "false";
+                        state = ADDACCOUNT;
+                        System.out.println(">>> Sending public RSA key.");
+                        EncryptionUtil cipher = new EncryptionUtil();
+                        if (!cipher.areKeysPresent()) {
+                            cipher.generateKey();
                         }
+                        ObjectInputStream inputStream = new ObjectInputStream(
+                                new FileInputStream(cipher.getPublicKeyFile()));
+                        PublicKey publicKey;
+                        try {
+                            publicKey = (PublicKey) inputStream.readObject();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        HashMap<String, PublicKey> keyMap = new HashMap<>();
+                        keyMap.put("key", publicKey);
+                        output = gson.toJson(keyMap);
                         break;
                     case("login"):
                         acctName = inputArray[1];
@@ -141,17 +159,6 @@ public class ServerProcessor {
                             System.out.println(">>> Saving data for: " + acctName);
                             authStorage.saveData(acctName, saveName, data);
                             output = "true";
-//                            if (loggedInList.contains(inputArray[1])) {
-//                                acctName = inputArray[1];
-//                                saveName = inputArray[2];
-//                                String data = inputArray[3];
-//                                System.out.println(">>> Saving data for: " + acctName);
-//                                authStorage.saveData(acctName, saveName, data);
-//                                output = "true";
-//                            } else {
-//                                System.out.println(">>> Failed to save because user not logged in.");
-//                                output = "User account is not logged in.";
-//                            }
                         } else {
                             System.out.println(">>> Failed to save because user not logged in.");
                             output = "User account is not logged in.";
@@ -200,6 +207,22 @@ public class ServerProcessor {
                     output = freebase.getTopic(input).toJSONString();
                 }
                 break;
+
+            case ADDACCOUNT:
+                if (!(input.equals("quit") && !input.equals("film") && !input.equals(""))) {
+                    Type mapType = new TypeToken<HashMap<String, String>>(){}.getType();
+                    HashMap<String, String> inputMap = gson.fromJson(input, mapType);
+                    acctName = inputMap.get("username");
+                    password = inputMap.get("password");
+                    System.out.println(">>> Attempting to add account: " + acctName);
+                    if (authStorage.addAcct(acctName, password)) {
+                        System.out.println(">>> Added new account: " + acctName);
+                        output = "true";
+                    } else {
+                        System.out.println(">>> Failed to add new account: " + acctName);
+                        output = "false";
+                    }
+                }
 
 //            case SAVING:
 //                io.write(input);

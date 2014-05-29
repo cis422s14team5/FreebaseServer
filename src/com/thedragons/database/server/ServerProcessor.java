@@ -30,6 +30,7 @@ public class ServerProcessor {
     private FileIO io;
     private AuthStorage authStorage;
     private Gson gson;
+    private EncryptionUtil cipher;
 
     private ArrayList<String> loggedInList;
 
@@ -44,6 +45,7 @@ public class ServerProcessor {
         authStorage = new AuthStorage();
         loggedInList = new ArrayList<>();
         gson = new Gson();
+        cipher = new EncryptionUtil();
     }
 
     /**
@@ -87,21 +89,23 @@ public class ServerProcessor {
                         break;
                     case("add"):
                         state = ADDACCOUNT;
-                        System.out.println(">>> Sending public RSA key.");
-                        EncryptionUtil cipher = new EncryptionUtil();
                         if (!cipher.areKeysPresent()) {
                             cipher.generateKey();
                         }
-                        ObjectInputStream inputStream = new ObjectInputStream(
-                                new FileInputStream(cipher.getPublicKeyFile()));
+
+                        // Send key to user.
+                        System.out.println(">>> Sending public RSA key.");
+                        HashMap<String, byte[]> keyMap = new HashMap<>();
                         PublicKey publicKey;
                         try {
-                            publicKey = (PublicKey) inputStream.readObject();
+                            publicKey = cipher.getPublicKey();
+
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
-                        HashMap<String, PublicKey> keyMap = new HashMap<>();
-                        keyMap.put("key", publicKey);
+                        byte[] keyArray = publicKey.getEncoded();
+
+                        keyMap.put("key", keyArray);
                         output = gson.toJson(keyMap);
                         break;
                     case("login"):
@@ -210,19 +214,25 @@ public class ServerProcessor {
 
             case ADDACCOUNT:
                 if (!(input.equals("quit") && !input.equals("film") && !input.equals(""))) {
-                    Type mapType = new TypeToken<HashMap<String, String>>(){}.getType();
-                    HashMap<String, String> inputMap = gson.fromJson(input, mapType);
-                    acctName = inputMap.get("username");
-                    password = inputMap.get("password");
-                    System.out.println(">>> Attempting to add account: " + acctName);
-                    if (authStorage.addAcct(acctName, password)) {
-                        System.out.println(">>> Added new account: " + acctName);
-                        output = "true";
-                    } else {
-                        System.out.println(">>> Failed to add new account: " + acctName);
-                        output = "false";
+                    Type mapType = new TypeToken<HashMap<String, byte[]>>(){}.getType();
+                    HashMap<String, byte[]> inputMap = gson.fromJson(input, mapType);
+
+                    try {
+                        acctName = cipher.decrypt(inputMap.get("username"), cipher.getPrivateKey());
+                        password = cipher.decrypt(inputMap.get("password"), cipher.getPrivateKey());
+                        System.out.println(">>> Attempting to add account: " + acctName);
+                        if (authStorage.addAcct(acctName, password)) {
+                            System.out.println(">>> Added new account: " + acctName);
+                            output = "true";
+                        } else {
+                            System.out.println(">>> Failed to add new account: " + acctName);
+                            output = "false";
+                        }
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
+                break;
 
 //            case SAVING:
 //                io.write(input);

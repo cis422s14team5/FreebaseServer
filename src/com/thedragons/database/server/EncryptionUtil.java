@@ -1,9 +1,7 @@
 package com.thedragons.database.server;
 
 import javax.crypto.Cipher;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
@@ -111,6 +109,16 @@ public class EncryptionUtil {
         }
 
         return new String(decryptedText);
+    }
+    
+    public PublicKey getPublicKey() throws IOException, ClassNotFoundException {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(publicKeyFile));
+        return (PublicKey) inputStream.readObject();
+    }
+
+    public PrivateKey getPrivateKey() throws IOException, ClassNotFoundException {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(privateKeyFile));
+        return (PrivateKey) inputStream.readObject();
     }
 
     public File getPrivateKeyFile() {

@@ -20,6 +20,8 @@ public class AuthStorage {
 	private boolean validAcct(String acctName) throws IOException {
         //alphanumeric only and 2-12 characters
 		if (!acctName.matches("^[a-zA-Z0-9]{2,13}$")) {
+
+            System.out.println(">>> Account name is not valid.");
             return false;
         } else {//see if account exists
             BufferedReader in;
@@ -27,15 +29,9 @@ public class AuthStorage {
 			try {
                 in = new BufferedReader(new FileReader("users.txt"));
 			} catch (IOException e) {
+                System.out.println(">>> Failed to write to user.txt.");
 				System.out.println(e);
                 return false;
-			}
-			while((s = in.readLine()) != null) {
-                String[] userArray = s.split(" ");
-				if (!acctName.equals(userArray[0])) {
-                    return false;
-                }
-
 			}
 			in.close();
 		}
@@ -60,7 +56,7 @@ public class AuthStorage {
             }
         }
 
-		if (validAcct(acctName)){
+		if (validAcct(acctName)) {
             if (password.contains(" ")) {
                 return false;
             }
@@ -89,21 +85,18 @@ public class AuthStorage {
      * @throws IOException if read file failed.
      */
 	public boolean checkAccount(String acctName, String password) throws IOException {
-        BufferedReader in;
-		try {
-            in = new BufferedReader(new FileReader("users.txt"));
-		} catch (IOException e) {
-				System.out.println(e);
-                return false;
-		}
-        String s;
         boolean isAccount = false;
-        if ((s = in.readLine()) != null) {
-            String[] credentials = s.split(" ");
+
+        BufferedReader reader = new BufferedReader(new FileReader("users.txt"));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] credentials = line.split(" ");
             if (acctName.equals(credentials[0]) && password.equals(credentials[1])) {
                 isAccount = true;
             }
         }
+        reader.close();
+
         return isAccount;
 	}
 

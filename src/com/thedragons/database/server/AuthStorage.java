@@ -19,23 +19,22 @@ public class AuthStorage {
      */
 	private boolean validAcct(String acctName) throws IOException {
         //alphanumeric only and 2-12 characters
+        boolean isAccount = true;
 		if (!acctName.matches("^[a-zA-Z0-9]{2,13}$")) {
-
             System.out.println(">>> Account name is not valid.");
-            return false;
-        } else {//see if account exists
-            BufferedReader in;
-			String s = "";
-			try {
-                in = new BufferedReader(new FileReader("users.txt"));
-			} catch (IOException e) {
-                System.out.println(">>> Failed to write to user.txt.");
-				System.out.println(e);
-                return false;
-			}
-			in.close();
+            isAccount = false;
+        } else { //see if account exists
+            BufferedReader reader = new BufferedReader(new FileReader("users.txt"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] credentials = line.split(" ");
+                if (acctName.equals(credentials[0])) {
+                    isAccount = false;
+                }
+            }
+            reader.close();
 		}
-		return true;
+		return isAccount;
 	}
 
     /**

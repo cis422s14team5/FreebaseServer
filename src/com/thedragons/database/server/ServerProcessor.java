@@ -105,15 +105,6 @@ public class ServerProcessor {
                             System.out.println(">>> Getting saves for: " + acctName);
                             output = authStorage.getSaves(acctName);
                             System.out.println(">>> Sending: " + output);
-//                            if (loggedInList.contains(inputArray[1])) {
-//                                acctName = inputArray[1];
-//                                System.out.println(">>> Getting saves for: " + acctName);
-//                                output = authStorage.getSaves(acctName);
-//                                System.out.println(">>> Sending: " + output);
-//                            } else {
-//                                System.out.println(">>> Failed to get saves because user not logged in.");
-//                                output = "User account is not logged in.";
-//                            }
                         } else {
                             System.out.println(">>> Failed to get saves because user not logged in.");
                             output = "User account is not logged in.";
@@ -128,17 +119,6 @@ public class ServerProcessor {
                             System.out.println(">>> Saving data for: " + acctName);
                             authStorage.saveData(acctName, saveName, data);
                             output = "true";
-//                            if (loggedInList.contains(inputArray[1])) {
-//                                acctName = inputArray[1];
-//                                saveName = inputArray[2];
-//                                String data = inputArray[3];
-//                                System.out.println(">>> Saving data for: " + acctName);
-//                                authStorage.saveData(acctName, saveName, data);
-//                                output = "true";
-//                            } else {
-//                                System.out.println(">>> Failed to save because user not logged in.");
-//                                output = "User account is not logged in.";
-//                            }
                         } else {
                             System.out.println(">>> Failed to save because user not logged in.");
                             output = "User account is not logged in.";
@@ -190,8 +170,8 @@ public class ServerProcessor {
 
             case ADD:
                 if (!(input.equals("quit") && !input.equals("film") && !input.equals(""))) {
-                    acctName = inputArray[1];
-                    password = inputArray[2];
+                    acctName = inputArray[0];
+                    password = inputArray[1];
                     System.out.println(">>> Attempting to add account: " + acctName);
                     if (authStorage.addAcct(acctName, password)) {
                         System.out.println(">>> Added new account: " + acctName);
@@ -201,10 +181,6 @@ public class ServerProcessor {
                         output = "false";
                     }
                 }
-
-//            case SAVING:
-//                io.write(input);
-//                break;
 
             default:
                 break;

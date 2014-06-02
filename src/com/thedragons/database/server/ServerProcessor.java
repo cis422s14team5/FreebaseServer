@@ -14,25 +14,19 @@ public class ServerProcessor {
     private static final int TV = 3;
     private static final int SAVING = 4;
     private static final int GETTOPIC = 5;
+    private static final int ADD = 6;
 
     private int state;
     private Freebase freebase;
-    // private TMDb tmDb;
-    private FileIO io;
     private AuthStorage authStorage;
-
-    private ArrayList<String> loggedInList;
 
     /**
      * Constructor.
      */
     public ServerProcessor() {
         freebase = new Freebase();
-        // tmDb = new TMDb();
-        io = new FileIO();
         state = WAITING;
         authStorage = new AuthStorage();
-        loggedInList = new ArrayList<>();
     }
 
     /**
@@ -75,16 +69,9 @@ public class ServerProcessor {
                         System.out.println(">>> Retrieving topic.");
                         break;
                     case("add"):
-                        acctName = inputArray[1];
-                        password = inputArray[2];
-                        System.out.println(">>> Attempting to add account: " + acctName);
-                        if (authStorage.addAcct(acctName, password)) {
-                            System.out.println(">>> Added new account: " + acctName);
-                            output = "true";
-                        } else {
-                            System.out.println(">>> Failed to add new account: " + acctName);
-                            output = "false";
-                        }
+                        state = ADD;
+                        output = ("Processing: " + inputArray[0]);
+                        System.out.println(">>> Ready to add new account.");
                         break;
                     case("login"):
                         acctName = inputArray[1];
@@ -200,6 +187,20 @@ public class ServerProcessor {
                     output = freebase.getTopic(input).toJSONString();
                 }
                 break;
+
+            case ADD:
+                if (!(input.equals("quit") && !input.equals("film") && !input.equals(""))) {
+                    acctName = inputArray[1];
+                    password = inputArray[2];
+                    System.out.println(">>> Attempting to add account: " + acctName);
+                    if (authStorage.addAcct(acctName, password)) {
+                        System.out.println(">>> Added new account: " + acctName);
+                        output = "true";
+                    } else {
+                        System.out.println(">>> Failed to add new account: " + acctName);
+                        output = "false";
+                    }
+                }
 
 //            case SAVING:
 //                io.write(input);

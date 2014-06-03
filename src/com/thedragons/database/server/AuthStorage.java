@@ -73,6 +73,8 @@ public class AuthStorage {
 			d.mkdir();
             return true;
 		}
+
+        saveData(acctName, "", "");
         return false;
 	}
 
@@ -138,7 +140,7 @@ public class AuthStorage {
         if (!t.exists()) {
             FileWriter saves;
             try {
-                saves = new FileWriter(acctName + "/saves.txt", true);//1 is for append
+                saves = new FileWriter(acctName + "/saves.txt", true); //1 is for append
             } catch (IOException e) {
                 System.out.println(e);
                 return;

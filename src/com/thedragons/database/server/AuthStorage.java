@@ -71,10 +71,17 @@ public class AuthStorage {
 			
 			File d = new File(acctName);//making folder for users data
 			d.mkdir();
+
+            File file = new File(acctName + "/saves.txt");
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch(IOException e){
+                    System.out.println(e);
+                }
+            }
             return true;
 		}
-
-        saveData(acctName, "", "");
         return false;
 	}
 
